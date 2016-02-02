@@ -53,7 +53,7 @@ class PDOForum {
 	
     function getInfoUtil($name){
         $sql="select num, pseudo, mdp, nom, prenom, tsDerniereCx from ".PDOForum::$prefixe."util where pseudo='".$name."'";
-        $moi->logSQL($sql);
+        PDOForum::$moi->logSQL($sql);
         $rs = PDOForum::$monPdo->query($sql);
         $ligne = $rs->fetch();
         return $ligne;    
@@ -62,7 +62,14 @@ class PDOForum {
     function setDerniereCx($num){
         $date = new DateTime();
         $sql="update ".PDOForum::$prefixe."util set tsDerniereCx ='".$date->format('Y-m-d H:i:s')."' where num=".$num;
-        $moi->logSQL($sql);
+        PDOForum::$moi->logSQL($sql);
         $rs =  PDOForum::$monPdo->exec($sql);
     }
+    
+    function setNouveauUtil($pseudo,$mdp){
+		$sql="insert into ".PDOForum::$prefixe."util (pseudo, mdp) values ('".$pseudo."','".$mdp."')";
+		PDOForum::$moi->logSQL($sql);
+        $rs =  PDOForum::$monPdo->exec($sql);
+        return $rs;
+	}
 }

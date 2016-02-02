@@ -1,7 +1,7 @@
 <?php 
     include 'inc/class.Session.php'; Session::init();
     include 'inc/class.PDOForum.php'; 
-    
+    include 'vues/v_entete.php';
     
     if (isset($_POST['login']) && isset($_POST['password'])) {
         $pdo = PDOForum::getPdoForum();
@@ -19,14 +19,12 @@
         
     }
 ?>
-<html>
-  <head><title>Login</title></head>
-  <body>
     <form method="post" action="login.php">
-      Please login:<br>
-      Login : <input type="text" name="login"> <br>
-      Password : <input type="password" name="password">
+      Pour se connecter : <br>
+      Votre pseudo : <input type="text" name="login"> <br>
+      Mot de passe : <input type="password" name="password">
       <input type="submit" value="Login">
     </form>
-  </body>
-</html>
+<?php
+	include 'vues/v_pied.php';
+?> 
