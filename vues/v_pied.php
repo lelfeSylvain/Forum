@@ -6,6 +6,9 @@
 						echo "<br /><a href='index.php?uc=lecture'><big>Retourner au forum</big></a> - ";
 					echo "<a href='logout.php'>Déconnexion</a> <br />\n";
 				}
+				else {// non loggé
+					echo "<br /><a href='index.php?uc=lecture'><big>Retourner au forum</big></a>";
+				}
 			?>
 		</footer>
 
