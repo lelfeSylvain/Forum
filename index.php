@@ -12,8 +12,9 @@
     
     if(!isset($_REQUEST['uc'])){ //s'il n'y a pas d'uc alors on consulte les posts
      $_REQUEST['uc'] = 'lecture';
-     $_REQUEST['ac'] = 'tout';
+     $_REQUEST['num'] = 'tout';
     }	 
+	// TODO s'il n'y a pas de 'num' ?
     $uc = $_REQUEST['uc'];
     switch($uc){
             case 'lecture':{// uc lecture des posts

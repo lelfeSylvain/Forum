@@ -7,13 +7,15 @@
 		echo "".$unPost['corps']."<br />\n";
 		echo "rédigé le : ".$unPost['tsCreation'];
 		if ($unPost['codeEtat']>2){
-			echo ", modifié le ".$unPost['tsDerniereModif']."<br />";
+			echo ", ".$unPost['lib']." le ".$unPost['tsDerniereModif'];
 		}
+		echo "<br />\n";
 	}
 	
 	// fonction affichant une rubrique
 	function afficherRubrique($uneRub){
-		echo "<b><big><big>".$uneRub['titre']."</big></big></b>";
+		echo "<b><big><big><a href='index.php?uc=lecture&num=".$uneRub['pnum']."'>";
+		echo $uneRub['titre']."</a></big></big></b>";
 		echo "<br />\n";
 		
 	}

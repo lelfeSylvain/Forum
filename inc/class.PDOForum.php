@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 
 /**
  * Description of Class
@@ -65,13 +59,14 @@ class PDOForum {
 		fputs($fp,$nouverr);
 		fclose($fp); 
 	}
-    
+    // enregistre la dernière requête faite dans un fichier log
     private function logSQL($sql){
         $_SESSION['req']=$sql;
         $this->ajouterLog($this->logSQL,$sql);
         if ($this->modeDebug) echo $sql;
     }
 	
+	// renvoie les informations sur un utilisateur dont le pseudo est passé en paramètre
     function getInfoUtil($name){
         $sql="select num, pseudo, mdp, nom, prenom, tsDerniereCx from ".PDOForum::$prefixe."util where pseudo='".$name."'";
         $this->logSQL($sql);
@@ -80,6 +75,7 @@ class PDOForum {
         return $ligne;    
     }
     
+    // met à jour la dernière connexion/activité d'un utilisateur
     function setDerniereCx($num){
         $date = new DateTime();
         $sql="update ".PDOForum::$prefixe."util set tsDerniereCx ='".$date->format('Y-m-d H:i:s')."' where num=".$num;
@@ -87,6 +83,9 @@ class PDOForum {
         $rs =  PDOForum::$monPdo->exec($sql);
     }
     
+    // ajoute un nouvel utilisateur dans la base
+    // TODO : Pour le moment, on ajoute que le pseudo et le mdp
+    // il faut aussi enregistrer les autres propriétés
     function setNouveauUtil($pseudo,$mdp){
 		$sql="insert into ".PDOForum::$prefixe."util (pseudo, mdp) values ('".$pseudo."','".$mdp."')";
 		$this->logSQL($sql);
@@ -94,8 +93,32 @@ class PDOForum {
         return $rs;
 	}
 	
-	function getTousLesPosts($etat=2){
-		$sql="select * from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p,".PDOForum::$prefixe."etatPost e where codeEtat >=".$etat." and codeEtat=e.code and numAuteur=u.num order by estRubrique desc, tsDerniereModif desc";
+	// renvoie tous les posts dont l'état de publication a été passé en paramètre
+	// etat = 0 effacé, 1 créé, 2 publié, 3 modifié, 4 modéré
+	// niveau rubrique = 255 : rubrique principale, jamais affiché, 
+	// 254 : premier niveau; 253 : 2e niveau etc.
+	// 0 : un simple article
+	function getToutesLesRubriques($niveauRubrique=254,$etat=2){
+		$sql="select *, p.num as pnum from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p, ".PDOForum::$prefixe."etatPost e ";
+		$sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
+		$sql = $sql."and codeEtat >=".$etat." and  estRubrique >=".$niveauRubrique." ";
+		$sql = $sql."order by p.num asc, estRubrique desc, tsDerniereModif desc";
+		$this->logSQL($sql);
+        $rs = PDOForum::$monPdo->query($sql);
+        $ligne = $rs->fetchAll();
+        return $ligne; 
+	}
+	
+	// renvoie tous les posts d'une rubrique dont l'état de publication a été passé en paramètre
+	// etat = 0 effacé, 1 créé, 2 publié, 3 modifié, 4 modéré
+	// niveau rubrique = 255 : rubrique principale, jamais affiché, 
+	// 254 : premier niveau; 253 : 2e niveau etc.
+	// 0 : un simple article
+	function getTousLesPosts($numRubrique=254,$etat=2){
+		$sql="select *, p.num as pnum  from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p,".PDOForum::$prefixe."etatPost e ";
+		$sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
+		$sql = $sql."and codeEtat >=".$etat." and  numPostParent =".$numRubrique." ";
+		$sql = $sql."order by  estRubrique desc, tsDerniereModif desc";
 		$this->logSQL($sql);
         $rs = PDOForum::$monPdo->query($sql);
         $ligne = $rs->fetchAll();
