@@ -1,0 +1,6 @@
+id de requête : 
+select distinct titre, pseudo, corps, tsCreation, codeEtat, lib, tsDerniereModif,estRubrique, p.num as pnum  ,0 as nb from forum_util u, forum_post p,forum_etatPost e where codeEtat=e.code and numAuteur=u.num and codeEtat >=2 and  (numPostParent =4 or p.num=4) 
+union
+select distinct titre,  pseudo, corps, tsCreation, codeEtat, lib, tsDerniereModif ,estRubrique, p.num as pnum , count(*) as nb  from forum_util u, forum_post p, forum_etatPost e where codeEtat=e.code and numAuteur=u.num and codeEtat >=2 and  estRubrique >=254 group by titre,  pseudo, corps, tsCreation, codeEtat, lib, tsDerniereModif ,estRubrique, p.num 
+
+order by  estRubrique desc, tsDerniereModif desc

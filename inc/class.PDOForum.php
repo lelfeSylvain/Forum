@@ -99,9 +99,10 @@ class PDOForum {
 	// 254 : premier niveau; 253 : 2e niveau etc.
 	// 0 : un simple article
 	function getToutesLesRubriques($niveauRubrique=254,$etat=2){
-		$sql="select *, p.num as pnum from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p, ".PDOForum::$prefixe."etatPost e ";
+		$sql="select titre, p.num as pnum , count(*) as nb ,estRubrique from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p, ".PDOForum::$prefixe."etatPost e ";
 		$sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
 		$sql = $sql."and codeEtat >=".$etat." and  estRubrique >=".$niveauRubrique." ";
+		$sql = $sql."group by titre, p.num, estRubrique ";
 		$sql = $sql."order by p.num asc, estRubrique desc, tsDerniereModif desc";
 		$this->logSQL($sql);
         $rs = PDOForum::$monPdo->query($sql);
@@ -109,15 +110,18 @@ class PDOForum {
         return $ligne; 
 	}
 	
+	
+	
 	// renvoie tous les posts d'une rubrique dont l'état de publication a été passé en paramètre
 	// etat = 0 effacé, 1 créé, 2 publié, 3 modifié, 4 modéré
 	// niveau rubrique = 255 : rubrique principale, jamais affiché, 
 	// 254 : premier niveau; 253 : 2e niveau etc.
 	// 0 : un simple article
 	function getTousLesPosts($numRubrique=254,$etat=2){
-		$sql="select *, p.num as pnum  from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p,".PDOForum::$prefixe."etatPost e ";
+		$sql="select titre, pseudo, corps, tsCreation, codeEtat, lib, tsDerniereModif,estRubrique, p.num as pnum  from ";
+		$sql = $sql.PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p,".PDOForum::$prefixe."etatPost e ";
 		$sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
-		$sql = $sql."and codeEtat >=".$etat." and  numPostParent =".$numRubrique." ";
+		$sql = $sql."and codeEtat >=".$etat." and  (numPostParent =".$numRubrique." or p.num=".$numRubrique.") ";
 		$sql = $sql."order by  estRubrique desc, tsDerniereModif desc";
 		$this->logSQL($sql);
         $rs = PDOForum::$monPdo->query($sql);
