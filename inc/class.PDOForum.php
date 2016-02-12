@@ -31,9 +31,7 @@ class PDOForum {
     }
 /**
  * Fonction statique qui crée l'unique instance de la classe
- 
  * Appel : $instancePdoForum = PdoForum::getPdoForum();
- 
  * @return l'unique objet de la classe PdoForum
  */
     public  static function getPdoForum(){
@@ -45,20 +43,20 @@ class PDOForum {
     
     // ajoute une entrée dans le fichier log
 	
-	function ajouterLog($fichier,$message, $estErreur=false){
-		$date = new DateTime();
-		$msg = $date->format("Y-m-d H:i:s ");
-		if ($estErreur) {// message en erreur
-			$msg .="#### ERREUR : ";
-		}
-		$msg .= $message;
-		//ajouter fonction ecriture
-		$fp = fopen($fichier,'a+');
-		fseek($fp,SEEK_END);
-		$nouverr=$msg."\r\n";
-		fputs($fp,$nouverr);
-		fclose($fp); 
-	}
+    function ajouterLog($fichier,$message, $estErreur=false){
+            $date = new DateTime();
+            $msg = $date->format("Y-m-d H:i:s ");
+            if ($estErreur) {// message en erreur
+                    $msg .="#### ERREUR : ";
+            }
+            $msg .= $message;
+            //ajouter fonction ecriture
+            $fp = fopen($fichier,'a+');
+            fseek($fp,SEEK_END);
+            $nouverr=$msg."\r\n";
+            fputs($fp,$nouverr);
+            fclose($fp); 
+    }
     // enregistre la dernière requête faite dans un fichier log
     private function logSQL($sql){
         $_SESSION['req']=$sql;
@@ -87,45 +85,53 @@ class PDOForum {
     // TODO : Pour le moment, on ajoute que le pseudo et le mdp
     // il faut aussi enregistrer les autres propriétés
     function setNouveauUtil($pseudo,$mdp){
-		$sql="insert into ".PDOForum::$prefixe."util (pseudo, mdp) values ('".$pseudo."','".$mdp."')";
-		$this->logSQL($sql);
+        $sql="insert into ".PDOForum::$prefixe."util (pseudo, mdp) values ('".$pseudo."','".$mdp."')";
+        $this->logSQL($sql);
         $rs =  PDOForum::$monPdo->exec($sql);
         return $rs;
-	}
+    }
 	
-	// renvoie tous les posts dont l'état de publication a été passé en paramètre
-	// etat = 0 effacé, 1 créé, 2 publié, 3 modifié, 4 modéré
-	// niveau rubrique = 255 : rubrique principale, jamais affiché, 
-	// 254 : premier niveau; 253 : 2e niveau etc.
-	// 0 : un simple article
-	function getToutesLesRubriques($niveauRubrique=254,$etat=2){
-		$sql="select titre, p.num as pnum , count(*) as nb ,estRubrique from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p, ".PDOForum::$prefixe."etatPost e ";
-		$sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
-		$sql = $sql."and codeEtat >=".$etat." and  estRubrique >=".$niveauRubrique." ";
-		$sql = $sql."group by titre, p.num, estRubrique ";
-		$sql = $sql."order by p.num asc, estRubrique desc, tsDerniereModif desc";
-		$this->logSQL($sql);
+    // renvoie tous les RUBRIQUES contenues dans celle passée en paramètre
+    //  dont l'état de publication a été passé en paramètre
+    //  et compte combien de post/rubrique sont contenus dans celles-ci
+    // etat = 0 effacé, 1 créé, 2 publié, 3 modifié, 4 modéré
+
+    function getRubriquesIncluses($numRubrique=1,$etat=2){
+        $sql="select titre, p.num as pnum  ,estRubrique from ".PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p, ".PDOForum::$prefixe."etatPost e ";
+        $sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
+        $sql = $sql."and codeEtat >=".$etat." and estRubrique >0 ";
+        $sql=$sql."and  (numPostParent =".$numRubrique." or p.num=".$numRubrique.") ";
+        $sql = $sql."order by  tsDerniereModif desc";
+        $this->logSQL($sql);
         $rs = PDOForum::$monPdo->query($sql);
         $ligne = $rs->fetchAll();
         return $ligne; 
-	}
-	
-	
-	
-	// renvoie tous les posts d'une rubrique dont l'état de publication a été passé en paramètre
-	// etat = 0 effacé, 1 créé, 2 publié, 3 modifié, 4 modéré
-	// niveau rubrique = 255 : rubrique principale, jamais affiché, 
-	// 254 : premier niveau; 253 : 2e niveau etc.
-	// 0 : un simple article
-	function getTousLesPosts($numRubrique=254,$etat=2){
-		$sql="select titre, pseudo, corps, tsCreation, codeEtat, lib, tsDerniereModif,estRubrique, p.num as pnum  from ";
-		$sql = $sql.PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p,".PDOForum::$prefixe."etatPost e ";
-		$sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
-		$sql = $sql."and codeEtat >=".$etat." and  (numPostParent =".$numRubrique." or p.num=".$numRubrique.") ";
-		$sql = $sql."order by  estRubrique desc, tsDerniereModif desc";
-		$this->logSQL($sql);
+    }
+
+    // renvoie le numéro de la rubrique parent d'un post(ou rubrique) donné
+    function getRubriqueMere($num){
+        $sql = "select numPostParent from ".PDOForum::$prefixe."post p ";
+        $sql = $sql."where num=".$num;
+        $this->logSQL($sql);
+        $rs = PDOForum::$monPdo->query($sql);
+        $ligne = $rs->fetch();
+        return $ligne['numPostParent'];
+    }
+
+    // renvoie tous les posts contenus dans une rubrique ($numRubrique)
+    // dont l'état de publication a été passé en paramètre
+    // etat = 0 effacé, 1 créé, 2 publié, 3 modifié, 4 modéré
+
+    function getPostsInclus($numRubrique=1,$etat=2){
+        $sql="select titre, pseudo, corps, tsCreation, codeEtat, lib, tsDerniereModif,estRubrique, p.num as pnum  from ";
+        $sql = $sql.PDOForum::$prefixe."util u, ".PDOForum::$prefixe."post p,".PDOForum::$prefixe."etatPost e ";
+        $sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
+        $sql = $sql."and codeEtat >=".$etat." and estRubrique =0 ";
+        $sql=$sql."and  numPostParent =".$numRubrique." ";
+        $sql = $sql."order by  tsDerniereModif desc";
+        $this->logSQL($sql);
         $rs = PDOForum::$monPdo->query($sql);
         $ligne = $rs->fetchAll();
         return $ligne; 
-	}
+    }
 }
