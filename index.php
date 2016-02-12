@@ -5,6 +5,9 @@
     include 'inc/class.PDOForum.php';
     include 'inc/fonctions.php';
     include 'vues/v_entete.php';
+    // constantes 
+    define("EOL","<br />\n");// fin de ligne html et saut de ligne
+    
     if (!Session::isLogged()) {
         header('Location: login.php');
     }
@@ -17,15 +20,16 @@
      $_REQUEST['uc'] = 'lecture';
      $_REQUEST['num'] = 'tout';
     }	 
-	// TODO s'il n'y a pas de 'num' ?
     $uc = $_REQUEST['uc'];
     switch($uc){
-            case 'lecture':{// uc lecture des posts
-                    include("controleurs/c_lecture.php");break;
-            }
-           
-            default :  // par défaut on consulte les posts
-				include("controleurs/c_lecture.php");
+        case 'lecture':{// uc lecture des posts
+                include("controleurs/c_lecture.php");break;
+        }
+        case 'creer':{// uc création d'es'un post ou rubrique
+                include("controleurs/c_creation.php");break;
+        }
+        default :  // par défaut on consulte les posts
+            include("controleurs/c_lecture.php");
     }
     include("vues/v_pied.php") ;
 

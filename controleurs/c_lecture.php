@@ -1,5 +1,5 @@
 <?php
-    if ($_REQUEST['num']=="tout" or !is_numeric($_REQUEST['num'])) {
+    if ($_REQUEST['num']=="tout" or !is_numeric($_REQUEST['num']) or !isset($_REQUEST['num'])) {
         $rubriqueMere=1;
         $rubriqueActuelle=1;
     }
