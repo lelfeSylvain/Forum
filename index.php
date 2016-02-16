@@ -7,7 +7,7 @@
     include 'vues/v_entete.php';
     // constantes 
     define("EOL","<br />\n");// fin de ligne html et saut de ligne
-    
+    // test de suivi02
     if (!Session::isLogged()) {
         header('Location: login.php');
     }
