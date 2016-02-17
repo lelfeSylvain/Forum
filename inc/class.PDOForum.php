@@ -1,30 +1,37 @@
 <?php
 
-
+    include_once 'inc/class.MakeLog.php';
 /**
- * Description of Class
+ * Modèle du projet : permet d'accéder aux données de la BD
+ * La classe est munie d'un outil pour logger les requêtes
  *
  * @author sylvain
  */
 class PDOForum {
-	private static $serveur='mysql:host=localhost';
-	private static $bdd='dbname=sylvain';   		
-	private static $user='sylvain' ;    		
-	private static $mdp='sylvain' ;
-	private static $monPdo;
-	private static $moi=null;
-	public static $prefixe='forum_';
-	private  $dernierResultat=null;
-	private  $modeDebug=false;
-	private $logSQL="erreurSQL.log";
+    // paramètres d'accès au SGBD
+    private static $serveur='mysql:host=localhost';
+    private static $bdd='dbname=sylvain';   		
+    private static $user='sylvain' ;    		
+    private static $mdp='sylvain' ;
+    // préfixe de toutes les tables
+    public static $prefixe='forum_';
+    // classe technique permettant d'accéder au SGBD
+    private static $monPdo;
+    // pointeur sur moi-même (pattern singleton)
+    private static $moi=null; 
+    // active l'enregistrement des logs
+    private  $modeDebug=true;
+    private $monLog;
 /**
  * Constructeur privé, crée l'instance de PDO qui sera sollicitée
  * pour toutes les méthodes de la classe
  */				
     private function __construct(){
-		PDOForum::$monPdo = new PDO(PDOForum::$serveur.';'.PDOForum::$bdd, PDOForum::$user, PDOForum::$mdp); 
-            PDOForum::$monPdo->query("SET CHARACTER SET utf8");
-        fopen($this->logSQL,'w');    
+	PDOForum::$monPdo = new PDO(PDOForum::$serveur.';'.PDOForum::$bdd, PDOForum::$user, PDOForum::$mdp); 
+        PDOForum::$monPdo->query("SET CHARACTER SET utf8");
+        // initialise le fichier log
+        $this->monLog = new MakeLog("erreurSQL","./","w");
+            
     }
     public function __destruct(){
             PDOForum::$monPdo = null;
@@ -41,29 +48,13 @@ class PDOForum {
             return PDOForum::$moi;  
     }
     
-    // ajoute une entrée dans le fichier log
-	
-    function ajouterLog($fichier,$message, $estErreur=false){
-            $date = new DateTime();
-            $msg = $date->format("Y-m-d H:i:s ");
-            if ($estErreur) {// message en erreur
-                    $msg .="#### ERREUR : ";
-            }
-            $msg .= $message;
-            //ajouter fonction ecriture
-            $fp = fopen($fichier,'a+');
-            fseek($fp,SEEK_END);
-            $nouverr=$msg."\r\n";
-            fputs($fp,$nouverr);
-            fclose($fp); 
-    }
-    // enregistre la dernière requête faite dans un fichier log
+	// enregistre la dernière requête faite dans un fichier log
     private function logSQL($sql){
-        $_SESSION['req']=$sql;
-        $this->ajouterLog($this->logSQL,$sql);
-        if ($this->modeDebug) echo $sql;
+        if ($this->modeDebug) {
+            $this->monLog->ajouterLog($sql);
+        }
     }
-	
+   	
 	// renvoie les informations sur un utilisateur dont le pseudo est passé en paramètre
     function getInfoUtil($name){
         $sql="select num, pseudo, mdp, nom, prenom, tsDerniereCx from ".PDOForum::$prefixe."util where pseudo='".$name."'";
