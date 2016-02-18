@@ -2,23 +2,24 @@
 
     // affiche un article passé en paramètre
     function afficherArticles($unPost){
-        echo "<b><big>".$unPost['titre']."</big></b>";
-        echo " - <b>".$unPost['pseudo']."</b><br />\n";
+        echo "<div id='main' role='main' class='ma0 txtleft pas'>";
+        echo "<span class='titrepost'>".$unPost['titre']."</span>";
+        echo " - <span class='auteurpost'>".$unPost['pseudo']."</span><br />\n";
         echo "".$unPost['corps'].EOL;
-        echo "rédigé le : ".$unPost['tsCreation'];
+        echo "<span class='textpetit'>rédigé le : ".$unPost['tsCreation'];
         if ($unPost['codeEtat']>2){
                 echo ", ".$unPost['lib']." le ".$unPost['tsDerniereModif'];
         }
-        echo EOL;
+        echo "</span>".EOL;
         echo "<a href='index.php?uc=creer&quoi=post&num=".$unPost['pnum']."'>répondre</a>";
-        echo EOL;
+        echo "</div>";
     }
 	
 
 	
     // Affiche un entête d'une rubrique, si entete est vrai c'est la rubrique actuelle
     function afficherRubriques($uneRub,$entete=0){
-        echo "<b><big><big>";
+        echo "<div  class='rubrique'>";
         if (!$entete) {
             echo "<a href='index.php?uc=lecture&num=".$uneRub['pnum']."'>";
         }
@@ -26,20 +27,21 @@
         if (!$entete) {
             echo "</a>";
         }
-        echo "</a></big></big></b> ".EOL;
+        echo "</div> ".EOL;
     }
 
     // suite du code
     // on affiche la référence à un niveau supérieur
+    echo "<div class='ariane'>";
     if ($rubriqueActuelle==1) {
         echo "vous êtes au plus haut niveau";
     }
     else {
         echo "<a href='index.php?uc=lecture&num=".$rubriqueMere."'>remonter au niveau supérieur</a>";
     }
-    echo EOL;
+    echo "</div>";
     // on affiche les rubriques contenues à notre niveau. 
-    // la première rubrique afichée est la rubrique actuelle
+    // la première rubrique affichée est la rubrique actuelle
     foreach($lesRubriques as $uneRubrique){
         afficherRubriques($uneRubrique,$rubriqueActuelle==$uneRubrique['pnum']);// sans l'entete pour l'actuelle 
     }
