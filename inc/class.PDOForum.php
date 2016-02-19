@@ -92,7 +92,7 @@ class PDOForum {
         $sql = $sql."where codeEtat=e.code and numAuteur=u.num "; // jointures
         $sql = $sql."and codeEtat >=".$etat." and estRubrique >0 ";
         $sql=$sql."and  (numPostParent =".$numRubrique." or p.num=".$numRubrique.") ";
-        $sql = $sql."order by  tsDerniereModif desc";
+        $sql = $sql."order by  p.num asc";
         $this->logSQL($sql);
         $rs = PDOForum::$monPdo->query($sql);
         $ligne = $rs->fetchAll();
@@ -124,5 +124,40 @@ class PDOForum {
         $rs = PDOForum::$monPdo->query($sql);
         $ligne = $rs->fetchAll();
         return $ligne; 
+    }
+    
+    function getProchainNumero(){
+        $sql="select max(num)+1 as next from ".PDOForum::$prefixe."post";
+        $this->logSQL($sql);
+        $rs = PDOForum::$monPdo->query($sql);
+        $ligne = $rs->fetch();
+        return $ligne['next'];
+    }
+    
+    function getNiveau($num){
+        $sql="select estRubrique from ".PDOForum::$prefixe."post where num=".$num;
+        $this->logSQL($sql);
+        $rs = PDOForum::$monPdo->query($sql);
+        $ligne = $rs->fetch();
+        return $ligne['estRubrique']-1; 
+    }
+    
+    function ajouterRubrique($num, $titre,$auteur){
+        $estRub=$this->getNiveau($num);
+        if ( $estRub<0) {$estRub=0;}
+        $sql="insert into ".PDOForum::$prefixe."post (numPostParent, estRubrique,codeEtat, titre, numAuteur) values (";
+        $sql= $sql.$num.", ".$estRub.",2,'".$titre."',".$auteur.")";
+        $this->logSQL($sql);
+        $rs = PDOForum::$monPdo->query($sql);
+        
+        return $rs;
+    }
+    
+    function ajouterPost($num, $titre,$auteur,$post){
+        $sql="insert into ".PDOForum::$prefixe."post (numPostParent, estRubrique,codeEtat, titre, numAuteur, corps) values (";
+        $sql= $sql.$num.", 0,2,'".$titre."',".$auteur.",'".$post."')";
+        $this->logSQL($sql);
+        $rs = PDOForum::$monPdo->query($sql);
+        return $rs;
     }
 }

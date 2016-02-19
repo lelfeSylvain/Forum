@@ -30,14 +30,16 @@ class FabriqueVue {
             return FabriqueVue::$maFabrique;  
     }
     
-    public function getForm($form){
+    public function getForm($form,$num,$prochaine){
         switch($form){
             case 'rubrique' : 
                 include "vues/v_creerRubrique.php";
                 break;
             case 'post':
+                include "vues/v_creerPost.php";
                 break;
             case 'valider':
+                include "vues/v_creerValider.php";
                 break;
         }
     }

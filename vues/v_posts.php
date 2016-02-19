@@ -2,7 +2,7 @@
 
     // affiche un article passé en paramètre
     function afficherArticles($unPost){
-        echo "<div id='main' role='main' class='ma0 txtleft pas'>";
+        echo "<article id='main' role='main' class='mbs txtleft pas'>";
         echo "<span class='titrepost'>".$unPost['titre']."</span>";
         echo " - <span class='auteurpost'>".$unPost['pseudo']."</span><br />\n";
         echo "".$unPost['corps'].EOL;
@@ -12,14 +12,14 @@
         }
         echo "</span>".EOL;
         echo "<a href='index.php?uc=creer&quoi=post&num=".$unPost['pnum']."'>répondre</a>";
-        echo "</div>";
+        echo "</article>";
     }
 	
 
 	
     // Affiche un entête d'une rubrique, si entete est vrai c'est la rubrique actuelle
     function afficherRubriques($uneRub,$entete=0){
-        echo "<div  class='rubrique'>";
+        echo "<article  class='rubrique'>";
         if (!$entete) {
             echo "<a href='index.php?uc=lecture&num=".$uneRub['pnum']."'>";
         }
@@ -27,19 +27,20 @@
         if (!$entete) {
             echo "</a>";
         }
-        echo "</div> ".EOL;
+        echo "</article> ".EOL;
     }
 
     // suite du code
+    echo "<section class='mls'>\n";
     // on affiche la référence à un niveau supérieur
-    echo "<div class='ariane'>";
+    echo "<nav class='ariane mbs'>";
     if ($rubriqueActuelle==1) {
         echo "vous êtes au plus haut niveau";
     }
     else {
         echo "<a href='index.php?uc=lecture&num=".$rubriqueMere."'>remonter au niveau supérieur</a>";
     }
-    echo "</div>";
+    echo "</nav>";
     // on affiche les rubriques contenues à notre niveau. 
     // la première rubrique affichée est la rubrique actuelle
     foreach($lesRubriques as $uneRubrique){
@@ -49,11 +50,12 @@
     foreach($lesPosts as $unPost){
         afficherArticles($unPost);
     }
+    echo "<nav>";
     // on propose de créer une nouvelle rubrique
     echo "<a href='index.php?uc=creer&quoi=rubrique&num=".$rubriqueActuelle."'>créer une nouvelle rubrique</a> - ";
     // on propose de créer un nouvel article
     echo "<a href='index.php?uc=creer&quoi=post&num=".$rubriqueActuelle."'>créer un nouvel article</a>";
     echo EOL;        
-    
+    echo"</nav></section>";
 
 ?>

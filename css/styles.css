@@ -2,16 +2,13 @@
 html {
     min-height: 100%;
     width: 80%;
-    padding: 0 10px;
     margin: 0 18%;
     position: relative;
-    padding: 0 10px;
+    background-color: aliceblue;
 }
 
 body {
-    
-    background-size:  80% 80%;
-    background-color : lightcyan;
+    background-color : azure;
     width: 80%;
     font-size : 1.2em;
 }
@@ -43,11 +40,16 @@ div {
     font-size : 0.8em;
 }
 
-.ariane {
-    font-size : 0.8em;
+nav {
+    font-size : 1.0em;
     font-style: italic;
     background-color: lightgray;
 }
+
+article {
+    background-color: lightblue;
+}
+
 
 .rubrique {
     font-size : 1.4em;
