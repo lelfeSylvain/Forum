@@ -26,12 +26,23 @@
          $_REQUEST['num'] = 'tout';
         }	 
         $uc = $_REQUEST['uc'];
+        // gère le fil d'ariane
+        if ($_REQUEST['num']=="tout" or !is_numeric($_REQUEST['num']) or !isset($_REQUEST['num'])) {
+            $rubriqueMere=1;
+            $rubriqueActuelle=1;
+        }
+        else {
+            $rubriqueActuelle=$_REQUEST['num'];
+            $rubriqueMere=$pdo->getRubriqueMere($rubriqueActuelle);
+        }
+        include 'vues/v_ariane.php';
+        //aiguillage principal
         switch($uc){
             case 'lecture':{// uc lecture des posts
-                    include("controleurs/c_lecture.php");break;
+                include("controleurs/c_lecture.php");break;
             }
             case 'creer':{// uc création d'un post ou rubrique
-                    include("controleurs/c_creation.php");break;
+                include("controleurs/c_creation.php");break;
             }
             default :  // par défaut on consulte les posts
                 include("controleurs/c_lecture.php");

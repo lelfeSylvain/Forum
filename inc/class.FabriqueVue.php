@@ -39,6 +39,8 @@ class FabriqueVue {
                 include "vues/v_creerPost.php";
                 break;
             case 'valider':
+                $estRub=$num;
+                $unPost=$prochaine;
                 include "vues/v_creerValider.php";
                 break;
         }
