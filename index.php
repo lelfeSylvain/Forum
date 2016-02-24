@@ -4,10 +4,11 @@
     Session::init();
     require_once 'inc/class.PDOForum.php';
     require_once 'inc/class.FabriqueVue.php';
-    require_once 'inc/fonctions.php';
+    require_once 'vues/fonctions.php';
     include_once 'vues/v_entete.php';
     // constantes 
     define("EOL","<br />\n");// fin de ligne html et saut de ligne
+    define("EL","\n");//  saut de ligne 
     
     // si l'utilisateur n'est pas identifié, il doit le faire
     if (!Session::isLogged()) {
@@ -27,15 +28,8 @@
         }	 
         $uc = $_REQUEST['uc'];
         // gère le fil d'ariane
-        if ($_REQUEST['num']=="tout" or !is_numeric($_REQUEST['num']) or !isset($_REQUEST['num'])) {
-            $rubriqueMere=1;
-            $rubriqueActuelle=1;
-        }
-        else {
-            $rubriqueActuelle=$_REQUEST['num'];
-            $rubriqueMere=$pdo->getRubriqueMere($rubriqueActuelle);
-        }
-        include 'vues/v_ariane.php';
+        include_once 'controleurs/c_ariane.php';
+        
         //aiguillage principal
         switch($uc){
             case 'lecture':{// uc lecture des posts

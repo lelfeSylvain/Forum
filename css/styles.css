@@ -44,33 +44,65 @@ nav {
     font-size : 1.0em;
     font-style: italic;
     background-color: lightgray;
-    padding-left:  3px;
+    padding-left:  5px;
+    margin-right:  5px;
+    margin-left:  5px;
+    margin-bottom : 10px;
+}
+nav.ariane {
+    
 }
 
 article {
     background-color: lightblue;
+    margin-left: 0px;
+    margin-right:10px;
+    margin-bottom:3px;
+    padding : 2px;
+    
 }
 article.corpsRubrique {
-    font-size : 0.8em;
+    font-size : 1.0em;
     font-weight: normal;
+    margin-left: 0px;
+    margin-bottom: 3px;
 }
 
 .rubrique {
+    background-color: lightsteelblue;
+    padding-left:  3px;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+.incluse {
+    background-color: lightskyblue;
+    margin-right : 0px;
+}
+
+.enteteRubrique {
     font-size : 1.4em;
     font-weight: bold;
     color : black;
     background-color: lightsteelblue;
-    padding-left:  3px;
 }
 
 .titrepost {
     font-size : 1.2em;
     font-weight: bold;
     color : black;
-    background-color: lightskyblue;
+    /*background-color: lightskyblue;*/
+    padding: 3px;
 }
 
 .auteurpost {
-    font-size : 0.8em;
+    font-size : 1.0em;
     font-style: normal;
+}
+
+section.forum {
+    margin-left: 5px;
+    margin-right: 5px; 
+    
+    
 }

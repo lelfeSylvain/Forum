@@ -18,21 +18,23 @@ function pluriel($n, $mot){
   * @param type $unPost tableau de valeur correspondant à un seul article
   */
 function afficherArticle($unPost){
-    echo "<article class='mbs txtleft pas'>";
+    echo "<article class=' article '>";
     echo "<span class='titrepost'>".$unPost['titre']."</span>".EOL;
     afficherCorpsArticle($unPost);
     
 }
 
-function afficherCorpsArticle($unPost){
+function afficherCorpsArticle($unPost,$estActuelle=0){
     echo "".$unPost['corps'].EOL;
-    echo "<span class='textpetit'>rédigé par <span class='auteurpost'>".$unPost['pseudo']."</span>";
-    echo ", le : ".$unPost['tsCreation'];
-    if ($unPost['codeEtat']>2){
-            echo ", ".$unPost['lib']." le ".$unPost['tsDerniereModif'];
+    if (!$estActuelle) {
+        echo "<span class='textpetit'>rédigé par <span class='auteurpost'>".$unPost['pseudo']."</span>";
+        echo ", le : ".$unPost['tsCreation'];
+        if ($unPost['codeEtat']>2){
+                echo ", ".$unPost['lib']." le ".$unPost['tsDerniereModif'];
+        }
+        echo "</span>".EOL;
+        echo "<a href='index.php?uc=creer&quoi=post&num=".$unPost['pnum']."'>répondre à cet article</a>";
     }
-    echo "</span>".EOL;
-    echo "<a href='index.php?uc=creer&quoi=post&num=".$unPost['pnum']."'>répondre</a>";
     echo "</article>";
 }
 	
@@ -45,19 +47,30 @@ function afficherCorpsArticle($unPost){
  * @param type $estActuelle faut-il mettre un lien hypertexte (oui par défaut)
  */
 function afficherRubrique($uneRub,$estActuelle=0){
-    echo "<article  class='rubrique'>";
+    if (!$estActuelle) {
+        echo "<article  class='rubrique incluse'>".EL;
+    }
+    else {
+       echo "<article  class='rubrique '>".EL; 
+    }
+    echo "<article  class='enteteRubrique'>".EL;
+    
     if (!$estActuelle) {
         echo "<a href='index.php?uc=lecture&num=".$uneRub['pnum']."'>";
     }
+   
     echo $uneRub['titre'];
     if (!$estActuelle) {
-        echo "</a>";
+        echo "</a></article>".EL;// fin entete rubrique
     }    
-    elseif ($uneRub['corps']!="") {
-        echo "<article class='corpsRubrique'>";
-        afficherCorpsArticle($uneRub);
+    else {
+        echo "</article>".EL;// fin entete rubrique
+        if ($uneRub['corps']!="") {
+            echo "<article class='corpsRubrique'>";
+            afficherCorpsArticle($uneRub,$estActuelle);
+        }
     }
-    echo "</article> ".EOL;
+    if (!$estActuelle) {echo "</article> ".EL;}
     
 }
 

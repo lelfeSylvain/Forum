@@ -1,8 +1,8 @@
 <?php
 
-echo "<section class='mls'>\n";
+
 // on affiche la référence à un niveau supérieur
-echo "<nav class='ariane mbs'>";
+echo "<nav class='ariane'>";
 if ($rubriqueActuelle==1) {
     echo "vous êtes au plus haut niveau";
 }

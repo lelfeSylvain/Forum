@@ -1,6 +1,7 @@
 <?php
 
-    
+    echo "<section class='forum'>\n";
+    include 'vues/v_ariane.php';
     // on affiche les rubriques contenues à notre niveau. 
     // la première rubrique affichée est la rubrique actuelle
     foreach($lesRubriques as $uneRubrique){
@@ -10,12 +11,16 @@
     foreach($lesPosts as $unPost){
         afficherArticle($unPost);
     }
-    echo "<nav>";
+     //echo "<nav>";
     // on propose de créer une nouvelle rubrique
-    echo "<a href='index.php?uc=creer&quoi=rubrique&num=".$rubriqueActuelle."'>créer une nouvelle rubrique</a> - ";
+    echo "<a href='index.php?uc=creer&quoi=rubrique&num=".$rubriqueActuelle."'>créer une nouvelle rubrique dans cette rubrique</a> - ";
     // on propose de créer un nouvel article
-    echo "<a href='index.php?uc=creer&quoi=post&num=".$rubriqueActuelle."'>créer un nouvel article</a>";
+    echo "<a href='index.php?uc=creer&quoi=post&num=".$rubriqueActuelle."'>créer un nouvel article dans cette rubrique</a>";
     echo EOL;        
-    echo"</nav></section>";
+    //echo"</nav>";
+    
+    echo "</article>".EL;
+           
+    echo"</section>";
 
 ?>

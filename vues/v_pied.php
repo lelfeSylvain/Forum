@@ -2,7 +2,10 @@
 		<footer id="footer" role="contentinfo" class="line ptm txtcenter mal ">
 			<?php  
                             if (Session::isLogged()) {
-                                    echo $_SESSION['username'] ." alias ".$_SESSION['prenom']." ". $_SESSION['nom'];
+                                    echo $_SESSION['username'];
+                                    if (isset($_SESSION['prenom']) or isset($_SESSION['nom'])) {
+                                        echo " alias ".$_SESSION['prenom']." ". $_SESSION['nom'];
+                                    }
                                     //if ($_REQUEST['uc']!='rec') 
                                             echo "<br /><a href='index.php?uc=lecture&num=tout' class='textgros'>Retourner à l'accueil</a> - ";
                                     echo "<a href='logout.php'>Déconnexion</a> <br />\n";
