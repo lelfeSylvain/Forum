@@ -7,7 +7,7 @@
         $pdo = PDOForum::getPdoForum();
         $login = $_POST['login'];
         $mdp = $_POST['password'];
-        if ($rep = $pdo->getInfoUtil($_POST['login'])) {// si j'ai une réponse du modèle
+        if ($rep = $pdo->getInfoUtil($login)) {// si j'ai une réponse du modèle
             if (Session::login($login, $mdp, $rep['pseudo'], $rep['mdp'])){
                 $_SESSION['nom'] = $rep['nom'];
                 $_SESSION['prenom'] = $rep['prenom'];
