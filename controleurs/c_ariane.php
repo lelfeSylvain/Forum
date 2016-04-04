@@ -8,5 +8,5 @@
     else {
         $rubriqueActuelle=$_REQUEST['num'];
         $rubriqueMere=$pdo->getRubriqueMere($rubriqueActuelle);
-    }
+    } 
 

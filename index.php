@@ -12,7 +12,13 @@
     
     // si l'utilisateur n'est pas identifié, il doit le faire
     if (!Session::isLogged()) {
-        header('Location: login.php');
+        $uc=$_REQUEST['uc'];
+        if ($uc==="inscrire") {
+                include ("controleurs/c_inscrire.php");
+        }
+        else {
+            header('Location: login.php'); // redirection vers le fichier login.php
+        }
     }
     else {  // à partir d'ici, l'utilisateur est forcément connecté
         // instanciation de la fabrique de vue

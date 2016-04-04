@@ -28,6 +28,7 @@
       Mot de passe : <input type="password" name="password">
       <input type="submit" value="Login">
     </form>
+    <a href ="inscrire.php">Vous pouvez vous inscrire ici.</a>
 <?php
 	include 'vues/v_pied.php';
 ?> 
