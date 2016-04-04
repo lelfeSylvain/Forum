@@ -1,4 +1,7 @@
 <?php 
+/* version obsolète */
+
+
     include 'inc/class.Session.php'; Session::init();
     include 'inc/class.PDOForum.php'; 
     include 'vues/v_entete.php';
@@ -36,10 +39,10 @@
 ?>
     <form method="post" action="inscrire.php">
       Pour s'inscrire : <br>
-      Votre pseudo : <input type="text" name="login" value=<?php echo $pseudo; ?>> <br>
-      Mot de passe : <input type="password" name="password1" value=<?php echo $mdp1; ?>><br>
-      Mot de passe : <input type="password" name="password2" value=<?php echo $mdp2; ?>>
-      <input type="submit" value="Login">
+      Votre pseudo : <input type="text" name="login" value="<?php echo $pseudo; ?>"> <br>
+      Mot de passe : <input type="password" name="password1" value="<?php echo $mdp1; ?>"><br>
+      Mot de passe : <input type="password" name="password2" value="<?php echo $mdp2; ?>">
+      <input type="submit" value="Inscription" onClick="v_inscrire()">
     </form>
 <?php
 	include 'vues/v_pied.php';
